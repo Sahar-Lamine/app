@@ -1,0 +1,14 @@
+{
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }],
+  "headers": [
+    {
+      "source": "/api/mcp",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Content-Type", "value": "text/event-stream" },
+        { "key": "Cache-Control", "value": "no-cache" },
+        { "key": "Connection", "value": "keep-alive" }
+      ]
+    }
+  ]
+}

@@ -1,56 +1,41 @@
 import { useEffect, useState } from 'react';
 
-const API_URL = "http://localhost:3000"; // URL de ton serveur Node
-
 export default function App() {
-  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const products = [
+    { id: 'p1', name: 'Premium Watch', price: 199, emoji: '⌚' },
+    { id: 'p2', name: 'Designer Bag', price: 85, emoji: '👜' }
+  ];
 
   useEffect(() => {
-    // 1. Charger les produits depuis le Backend
-    fetch(`${API_URL}/api/products`)
-      .then(res => res.json())
-      .then(data => {
-        setProducts(data);
-        
-        // 2. Vérifier si l'IA a envoyé des produits via l'URL
-        const params = new URLSearchParams(window.location.search);
-        const items = params.get('items');
-        if (items) {
-          const ids = items.split(',');
-          const aiSelected = data.filter(p => ids.includes(p.id));
-          setCart(aiSelected);
-        }
-      });
+    const params = new URLSearchParams(window.location.search);
+    const items = params.get('items');
+    if (items) {
+      const ids = items.split(',');
+      setCart(products.filter(p => ids.includes(p.id)));
+    }
   }, []);
 
-  const addToCart = (product) => setCart([...cart, product]);
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
-
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto', fontFamily: 'sans-serif' }}>
-      <h1>Ma Boutique (React + AI)</h1>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        <section>
-          <h2>Produits disponibles</h2>
-          {products.map(p => (
-            <div key={p.id} style={{ border: '1px solid #ddd', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
-              <span>{p.image} {p.name} - <b>{p.price}€</b></span>
-              <button onClick={() => addToCart(p)} style={{ float: 'right' }}>Ajouter</button>
-            </div>
-          ))}
-        </section>
+    <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+      <h1>Sahar AI Shop (Vercel Test)</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+        {products.map(p => (
+          <div key={p.id} style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '10px' }}>
+            <div style={{ fontSize: '40px' }}>{p.emoji}</div>
+            <h3>{p.name}</h3>
+            <p>{p.price}€</p>
+            <button onClick={() => setCart([...cart, p])}>Add Manual</button>
+          </div>
+        ))}
+      </div>
 
-        <section style={{ background: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
-          <h2>🛒 Panier ({cart.length})</h2>
-          {cart.map((item, i) => <div key={i} style={{ fontSize: '14px' }}>- {item.name} ({item.price}€)</div>)}
-          <hr />
-          <h3>Total : {total}€</h3>
-          <button disabled={cart.length === 0} style={{ width: '100%', padding: '10px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-            Payer maintenant
-          </button>
-        </section>
+      <div style={{ marginTop: '40px', padding: '20px', background: '#f0f0f0' }}>
+        <h2>Your Cart: {cart.length} items</h2>
+        {cart.map((item, i) => <div key={i}>{item.name} ({item.price}€)</div>)}
+        <button style={{ marginTop: '10px', background: 'black', color: 'white', padding: '10px 20px' }}>
+          Checkout: {cart.reduce((s, i) => s + i.price, 0)}€
+        </button>
       </div>
     </div>
   );
