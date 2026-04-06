@@ -1,0 +1,15 @@
+openapi: 3.1.0
+info:
+  title: Shop de Sahar (AI-Link)
+  version: 1.0.0
+servers:
+  - url: https://ton-app-render.onrender.com # TON URL RENDER ICI
+paths:
+  /sse:
+    get:
+      summary: Connexion au flux MCP
+      operationId: connectMCP
+  /messages:
+    post:
+      summary: Envoi des commandes d'outils
+      operationId: postMessage
